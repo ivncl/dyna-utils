@@ -7,4 +7,3 @@ Any help or collaboration is welcomed.
 To-do-list:
 - bugfixes
 - migration to other languages
-- 
