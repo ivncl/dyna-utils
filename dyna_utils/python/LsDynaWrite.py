@@ -388,8 +388,8 @@ def WriteDefCurve(row,data,title,Filename,Permission):
             '\n'  )
     f.write('$#                a1                  o1\n')
     for i in range(0,2):
-        f.write(str("{:+.9e}".format(data[i][0])) + \
-                str("{:+.9e}".format(data[i][1])) + \
+        f.write(str("{:+.13e}".format(data[i][0])) + \
+                str("{:+.13e}".format(data[i][1])) + \
                 '\n'  )
     
     f.close()  
