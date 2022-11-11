@@ -17,7 +17,7 @@ def WriteNodes(NIds,NodalCoords,Filename,Permission):
         - NIds: Nx1 array of nodal ids
         - NodalCoords: Nx3 array of nodal coordinates
         - Filename: string containing the filename (without extension)
-        - Permission: write/append
+        - Permission: write/append ('w'/'a')
     OUTPUTS:
         none
     --------------------------------------------------------------------------    
@@ -38,9 +38,9 @@ def WriteNodes(NIds,NodalCoords,Filename,Permission):
     f.write('$#   nid               x               y               z      tc      rc\n');
     for i in NN:
         f.write(str("{:8d}".format(NIds[i])) + \
-                str("{:+.9e}".format(NodalCoords[i][0])) + \
-                str("{:+.9e}".format(NodalCoords[i][1])) + \
-                str("{:+.9e}".format(NodalCoords[i][2])) + \
+                str("{:+.13e}".format(NodalCoords[i][0])) + \
+                str("{:+.13e}".format(NodalCoords[i][1])) + \
+                str("{:+.13e}".format(NodalCoords[i][2])) + \
                 str("{:8d}".format(0)) + \
                 str("{:8d}".format(0)) + \
                 '\n'  ) 
@@ -54,7 +54,7 @@ def WriteNodes_csv(NIds,NodalCoords,Filename,Permission):
         - NIds: Nx1 array of nodal ids
         - NodalCoords: Nx3 array of nodal coordinates
         - Filename: string containing the filename (without extension)
-        - Permission: write/append
+        - Permission: write/append ('w'/'a')
     OUTPUTS:
         none
     --------------------------------------------------------------------------    
@@ -90,9 +90,9 @@ def WriteElemSolids(EIds,PIds,ElemConnectivity,Filename,Permission):
     INPUTS: 
         - EIds: Nx1 array of elem ids
         - PIds: Nx1 array of elem part ids
-        - ElemConnectivity: Nx8 array of elem connectivity
+        - ElemConnectivity: Nx8 (or Nx4) array of elem connectivity
         - Filename: string containing the filename (without extension)
-        - Permission: write/append
+        - Permission: write/append ('w'/'a')
     OUTPUTS:
         none
     --------------------------------------------------------------------------    
@@ -149,7 +149,7 @@ def WriteElemSolids_csv(EIds,PIds,ElemConnectivity,Filename,Permission):
         - PIds: Nx1 array of elem part ids
         - ElemConnectivity: Nx8 array of elem connectivity
         - Filename: string containing the filename (without extension)
-        - Permission: write/append
+        - Permission: write/append ('w'/'a')
     OUTPUTS:
         none
     --------------------------------------------------------------------------    
@@ -201,7 +201,7 @@ def WriteElemBeams(EIds,PIds,ElemConnectivity,Filename,Permission):
         - PIds: Nx1 array of elem part ids
         - ElemConnectivity: Nx3 array of elem connectivity, third node may be 0
         - Filename: string containing the filename (without extension)
-        - Permission: write/append
+        - Permission: write/append ('w'/'a')
     OUTPUTS:
         none
     --------------------------------------------------------------------------    
@@ -237,7 +237,7 @@ def WriteSectionBeam(row1,row2,Filename,Permission):
         - row1: array of valuess in row1
         - row2: array of valuess in row1
         - Filename: string containing the filename (without extension)
-        - Permission: write/append
+        - Permission: write/append ('w'/'a')
     OUTPUTS:
         none
     --------------------------------------------------------------------------    
@@ -282,7 +282,7 @@ def WritePart(row1,title,Filename,Permission):
     INPUTS: 
         - row1: array of valuess in row1
         - Filename: string containing the filename (without extension)
-        - Permission: write/append
+        - Permission: write/append ('w'/'a')
     OUTPUTS:
         none
     --------------------------------------------------------------------------    
@@ -321,7 +321,7 @@ def WriteDefTrasf(tranid,transf,row,title,Filename,Permission):
         - transf: transf code
         - row: array of valuess in row
         - Filename: string containing the filename (without extension)
-        - Permission: write/append
+        - Permission: write/append ('w'/'a')
     OUTPUTS:
         none
     --------------------------------------------------------------------------    
@@ -358,7 +358,7 @@ def WriteDefCurve(row,data,title,Filename,Permission):
         - row: array of values in card1
         - data: nx2 numpy array
         - Filename: string containing the filename (without extension)
-        - Permission: write/append
+        - Permission: write/append ('w'/'a')
     OUTPUTS:
         none
     --------------------------------------------------------------------------    
@@ -393,3 +393,37 @@ def WriteDefCurve(row,data,title,Filename,Permission):
                 '\n'  )
     
     f.close()  
+    
+def WriteSPH(NIds,PIds,masses,Filename,Permission):
+    """
+    Write nodes (*NODE keyword) to file in LS-DYNA .k format
+    INPUTS: 
+        - NIds: Nx1 array of nodal ids
+        - NodalCoords: Nx3 array of nodal coordinates
+        - Filename: string containing the filename (without extension)
+        - Permission: write/append ('w'/'a')
+    OUTPUTS:
+        none
+    --------------------------------------------------------------------------    
+    *ELEMENT_SPH
+    $#   nid     pid            mass    
+     1000001     101    2.264088e-04
+     1000002     101    2.264088e-04
+    --------------------------------------------------------------------------
+    """
+    
+    f = open(Filename + '.k', Permission)
+    
+    N=len(NIds)
+    
+    NN = list(range(0, N))
+    
+    f.write('*ELEMENT_SPH\n')
+    f.write('$#   nid     pid            mass\n');
+    for i in NN:
+        f.write(str("{:8d}".format(NIds[i])) + \
+                str("{:8d}".format(PIds[i])) + \
+                str("{:+.13e}".format(masses[i])) + \
+                '\n'  ) 
+    
+    f.close()
