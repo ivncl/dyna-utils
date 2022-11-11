@@ -396,10 +396,11 @@ def WriteDefCurve(row,data,title,Filename,Permission):
     
 def WriteSPH(NIds,PIds,masses,Filename,Permission):
     """
-    Write nodes (*NODE keyword) to file in LS-DYNA .k format
+    Write SPH (*ELEMENT_SPH keyword) to file in LS-DYNA .k format
     INPUTS: 
         - NIds: Nx1 array of nodal ids
-        - NodalCoords: Nx3 array of nodal coordinates
+        - PIds: Nx1 array of elem part ids
+        - masess: Nx1 array of nodal masses
         - Filename: string containing the filename (without extension)
         - Permission: write/append ('w'/'a')
     OUTPUTS:
